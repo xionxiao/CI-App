@@ -13,7 +13,7 @@ android:
     - android-26
 before_install:
     - sudo apt-get -qq update
-    - sudo apt-get install -y sendmail
+    - sudo apt-get install -y sendemail
 script:
     - ./gradlew clean build
     - travis_wait 50 bash IntegrationTesting.sh
