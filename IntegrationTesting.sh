@@ -16,10 +16,10 @@ fi
 
 sleep 60
 
-for ((i=0; i<=2; i++)); do
+for ((i=0; i<=5; i++)); do
 buildEmailTitle=`curl -u $Email:$EmailPWD --silent "https://mail.google.com/mail/feed/atom" | awk -F '<title>' '{for (i=3; i<=NF; i++) {print $i"\n"}}' | awk -F '</title>' '{for (i=1; i<=NF; i=i+2) {print $i"\n"}}' | awk -F: '/^BuildNumber:'"$TRAVIS_JOB_ID"'/'`
 
-if [ $i -eq "1" ] ; then
+if [ $i -eq "4" ] ; then
 	echo "Integration testing : TIMEOUT!"
 	exit 0
 fi
