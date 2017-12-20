@@ -12,7 +12,8 @@ android:
     # The SDK version used to compile your project
     - android-26
 before_install:
-    - apt-get install sendmail
+    - sudo apt-get -qq update
+    - sudo apt-get install -y sendmail
 script:
     - ./gradlew clean build
     - travis_wait 50 bash IntegrationTesting.sh
