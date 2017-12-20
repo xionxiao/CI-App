@@ -1,7 +1,10 @@
+#!/bin/bash
 if [ "$Email" == "" ]; then
 	echo "lost email address!"
 	exit 0
 fi
+
+echo $IsIntegrationTestingTask
 
 if $IsIntegrationTestingTask -eq "true" ; then
 	echo "start Integration testing..."
@@ -14,7 +17,7 @@ fi
 sleep 60
 
 for ((i=0; i<=25; i++)); do
-buildEmailTitle=`curl -u $Email:$EmailPWD --silent "https://mail.google.com/mail/feed/atom/important" | awk -F '<title>' '{for (i=3; i<=NF; i++) {print $i"\n"}}' | awk -F '</title>' '{for (i=1; i<=NF; i=i+2) {print $i"\n"}}' | awk -F: '/^BuildNumber:'"$TRAVIS_JOB_ID"'/'`
+buildEmailTitle=`curl -u $Email:$EmailPWD --silent "https://mail.google.com/mail/feed/atom" | awk -F '<title>' '{for (i=3; i<=NF; i++) {print $i"\n"}}' | awk -F '</title>' '{for (i=1; i<=NF; i=i+2) {print $i"\n"}}' | awk -F: '/^BuildNumber:'"$TRAVIS_JOB_ID"'/'`
 
 if [ $i -eq "24" ] ; then
 	echo "Integration testing : TIMEOUT!"
