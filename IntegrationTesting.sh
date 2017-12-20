@@ -4,11 +4,9 @@ if [ "$Email" == "" ]; then
 	exit 0
 fi
 
-echo $IsIntegrationTestingTask
-
 if $IsIntegrationTestingTask -eq "true" ; then
 	echo "start Integration testing..."
-	sendemail -f "$Email" -t "$Email" -u "Jenkins build by Travis" -m "BranchName=$TRAVIS_BRANCH\nBuildNumber=$TRAVIS_JOB_ID\nPullRequestNumber=$TRAVIS_PULL_REQUEST" -s smtp.gmail.com:587 -o tls=yes -xu "$Email" -xp "$EmailPWD"
+	sendemail -f "$Email" -t "$Email" -u "Jenkins build by Travis" -m "BranchName=$TRAVIS_BRANCH\nTravisNumber=$TRAVIS_JOB_ID\nPullRequestNumber=$TRAVIS_PULL_REQUEST" -s smtp.gmail.com:587 -o tls=yes -xu "$Email" -xp "$EmailPWD"
 else
 	echo "not the integration test task return normal..."
 	exit 0
@@ -17,7 +15,7 @@ fi
 sleep 60
 
 for ((i=0; i<=5; i++)); do
-buildEmailTitle=`curl -u $Email:$EmailPWD --silent "https://mail.google.com/mail/feed/atom" | awk -F '<title>' '{for (i=3; i<=NF; i++) {print $i"\n"}}' | awk -F '</title>' '{for (i=1; i<=NF; i=i+2) {print $i"\n"}}' | awk -F: '/^BuildNumber:'"$TRAVIS_JOB_ID"'/'`
+buildEmailTitle=`curl -u $Email:$EmailPWD --silent "https://mail.google.com/mail/feed/atom" | awk -F '<title>' '{for (i=3; i<=NF; i++) {print $i"\n"}}' | awk -F '</title>' '{for (i=1; i<=NF; i=i+2) {print $i"\n"}}' | awk -F: '/^TravisNumber:'"$TRAVIS_JOB_ID"'/'`
 
 if [ $i -eq "4" ] ; then
 	echo "Integration testing : TIMEOUT!"
